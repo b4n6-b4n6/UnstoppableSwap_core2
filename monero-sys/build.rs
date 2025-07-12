@@ -53,11 +53,11 @@ fn main() {
         // .define("CMAKE_BUILD_TYPE", "Release")
         // .define("CMAKE_RELEASE_TYPE", "Release")
         // Force building static libraries
-        .define("STATIC", "ON")
-        .define("BUILD_SHARED_LIBS", "OFF")
+        // .define("STATIC", "ON")
+        // .define("BUILD_SHARED_LIBS", "OFF")
         .define("BUILD_TESTS", "OFF")
-        .define("Boost_USE_STATIC_LIBS", "ON")
-        .define("Boost_USE_STATIC_RUNTIME", "ON")
+        // .define("Boost_USE_STATIC_LIBS", "ON")
+        // .define("Boost_USE_STATIC_RUNTIME", "ON")
         //// Disable support for ALL hardware wallets
         // Disable Trezor support completely
         .define("USE_DEVICE_TREZOR", "OFF")
@@ -83,101 +83,32 @@ fn main() {
         })
         .build();
 
+    // --- Step 2: Provide Search Paths to the Linker ---
     let monero_build_dir = output_directory.join("build");
 
-    println!(
-        "cargo:debug=Build directory: {}",
-        output_directory.display()
-    );
-
-    // Add output directories to the link search path
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("lib").display()
-    );
-
-    // Add additional link search paths for libraries in different directories
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("contrib/epee/src").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("external/easylogging++").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir
-            .join("external/db_drivers/liblmdb")
-            .display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("external/randomx").display()
-    );
+    // Add all the directories where the .a files are located
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("lib").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("external/db_drivers/liblmdb").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("external/easylogging++").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("external/randomx").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("contrib/epee/src").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/common").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/crypto").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/ringct").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/checkpoints").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/cryptonote_basic").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/cryptonote_core").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/multisig").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/net").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/hardforks").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/blockchain_db").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/mnemonics").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/rpc").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/blocks").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/device").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src/device_trezor").display());
+    println!("cargo:rustc-link-search=native={}", monero_build_dir.join("src").display());
     println!("cargo:rustc-link-search=native=/usr/lib/x86_64-linux-gnu");
-
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/crypto").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/net").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/ringct").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/checkpoints").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/multisig").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/cryptonote_basic").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/common").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/cryptonote_core").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/hardforks").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/blockchain_db").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/device").display()
-    );
-    // device_trezor search path (stub version when disabled)
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/device_trezor").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/mnemonics").display()
-    );
-    println!(
-        "cargo:rustc-link-search=native={}",
-        monero_build_dir.join("src/rpc").display()
-    );
 
     #[cfg(target_os = "macos")]
     {
@@ -212,55 +143,54 @@ fn main() {
         println !("cargo:rustc-link-search=native=/Library/Developer/CommandLineTools/usr/lib/clang/18.0.0/lib/darwin");
     }
 
-    // Link libwallet and libwallet_api statically
-    println!("cargo:rustc-link-lib=static=wallet");
+    // --- Step 3: Link ALL Libraries ---
     println!("cargo:rustc-link-lib=static=wallet_api");
-
-    // Link targets of monero codebase statically
-    println!("cargo:rustc-link-lib=static=epee");
-    println!("cargo:rustc-link-lib=static=easylogging");
-    println!("cargo:rustc-link-lib=static=lmdb");
-    println!("cargo:rustc-link-lib=static=randomx");
-    println!("cargo:rustc-link-lib=static=cncrypto");
-    println!("cargo:rustc-link-lib=static=net");
-    println!("cargo:rustc-link-lib=static=ringct");
-    println!("cargo:rustc-link-lib=static=ringct_basic");
-    println!("cargo:rustc-link-lib=static=checkpoints");
-    println!("cargo:rustc-link-lib=static=multisig");
+    println!("cargo:rustc-link-lib=static=wallet");
     println!("cargo:rustc-link-lib=static=version");
+    println!("cargo:rustc-link-lib=static=device_trezor");
+    println!("cargo:rustc-link-lib=static=device");
+    println!("cargo:rustc-link-lib=static=blocks");
+    println!("cargo:rustc-link-lib=static=rpc_base");
+    println!("cargo:rustc-link-lib=static=mnemonics");
+    println!("cargo:rustc-link-lib=static=blockchain_db");
+    println!("cargo:rustc-link-lib=static=hardforks");
+    println!("cargo:rustc-link-lib=static=net");
+    println!("cargo:rustc-link-lib=static=multisig");
+    println!("cargo:rustc-link-lib=static=cryptonote_core");
     println!("cargo:rustc-link-lib=static=cryptonote_basic");
     println!("cargo:rustc-link-lib=static=cryptonote_format_utils_basic");
+    println!("cargo:rustc-link-lib=static=checkpoints");
+    println!("cargo:rustc-link-lib=static=ringct");
+    println!("cargo:rustc-link-lib=static=ringct_basic");
+    println!("cargo:rustc-link-lib=static=cncrypto");
     println!("cargo:rustc-link-lib=static=common");
-    println!("cargo:rustc-link-lib=static=cryptonote_core");
-    println!("cargo:rustc-link-lib=static=hardforks");
-    println!("cargo:rustc-link-lib=static=blockchain_db");
-    println!("cargo:rustc-link-lib=static=device");
-    // Link device_trezor (stub version when USE_DEVICE_TREZOR=OFF)
-    println!("cargo:rustc-link-lib=static=device_trezor");
-    println!("cargo:rustc-link-lib=static=mnemonics");
-    println!("cargo:rustc-link-lib=static=rpc_base");
-
-    // Static linking for boost
+    println!("cargo:rustc-link-lib=static=epee");
+    println!("cargo:rustc-link-lib=static=randomx");
+    println!("cargo:rustc-link-lib=static=easylogging");
+    println!("cargo:rustc-link-lib=static=lmdb");
+    
+    // Link system libraries that Monero depends on
+    println!("cargo:rustc-link-lib=static=boost_regex");
     println!("cargo:rustc-link-lib=static=boost_serialization");
     println!("cargo:rustc-link-lib=static=boost_filesystem");
     println!("cargo:rustc-link-lib=static=boost_thread");
     println!("cargo:rustc-link-lib=static=boost_chrono");
-
-    // Link libsodium statically
-    println!("cargo:rustc-link-lib=static=sodium");
-
-    // Link OpenSSL statically
-    println!("cargo:rustc-link-lib=static=ssl"); // This is OpenSSL (libsll)
-    println!("cargo:rustc-link-lib=static=crypto"); // This is OpenSSLs crypto library (libcrypto)
-
-    // Link unbound statically
     println!("cargo:rustc-link-lib=static=unbound");
-    println!("cargo:rustc-link-lib=static=expat"); // Expat is required by unbound
-    println!("cargo:rustc-link-lib=static=nghttp2");
-    println!("cargo:rustc-link-lib=static=event");
-
-    // Link protobuf statically
+    println!("cargo:rustc-link-lib=static=nettle");
+    println!("cargo:rustc-link-lib=static=hogweed");
+    println!("cargo:rustc-link-lib=static=gmp");
+    println!("cargo:rustc-link-lib=static=sodium");
+    println!("cargo:rustc-link-lib=static=ssl");
+    println!("cargo:rustc-link-lib=static=crypto");
+    println!("cargo:rustc-link-lib=static=expat");
     println!("cargo:rustc-link-lib=static=protobuf");
+    println!("cargo:rustc-link-lib=static=event");
+    println!("cargo:rustc-link-lib=static=nghttp2");
+    
+    // Standard system libs
+    println!("cargo:rustc-link-lib=stdc++");
+    println!("cargo:rustc-link-lib=dl");
+    println!("cargo:rustc-link-lib=rt");
 
     #[cfg(target_os = "macos")]
     {
@@ -271,7 +201,7 @@ fn main() {
         println!("cargo:rustc-link-arg=-mmacosx-version-min=11.0");
     }
 
-    // Build the CXX bridge
+    // --- Step 4: Build the CXX Bridge ---
     let mut build = cxx_build::bridge("src/bridge.rs");
 
     #[cfg(target_os = "macos")]
@@ -280,7 +210,7 @@ fn main() {
     }
 
     build
-        .flag_if_supported("-std=c++17")
+        //.flag_if_supported("-std=c++17")
         .include("src") // Include the bridge.h file
         .include("monero/src") // Includes the monero headers
         .include("monero/external/easylogging++") // Includes the easylogging++ headers
@@ -288,7 +218,7 @@ fn main() {
         .include("/opt/homebrew/include") // Homebrew include path for Boost
         .flag("-fPIC"); // Position independent code
 
-    #[cfg(target_os = "macos")]
+        #[cfg(target_os = "macos")]
     {
         // Use the same dynamic brew prefix for include paths
         let brew_prefix = std::process::Command::new("brew")
