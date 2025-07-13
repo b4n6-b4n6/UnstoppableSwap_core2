@@ -2,7 +2,7 @@ name: Build UnstoppableSwap with Docker
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
       with:
         name: deb-packages
         path: |
-          artifacts/deb/*.deb
+          artifacts/output/deb/*.deb
         retention-days: 30
         
     - name: Upload .AppImage files
@@ -51,7 +51,7 @@ jobs:
       with:
         name: appimage-files
         path: |
-          artifacts/appimage/*.AppImage
+          artifacts/output/appimage/*.AppImage
         retention-days: 30
         
     - name: Upload all build artifacts
