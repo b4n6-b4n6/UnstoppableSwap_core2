@@ -1,4 +1,4 @@
-FROM debian:12
+FROM ubuntu:22.04
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -75,7 +75,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | b
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
     && . "$HOME/.cargo/env" \
     && rustc --version
-
+    
 # Set working directory
 WORKDIR /app
 

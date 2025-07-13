@@ -29,3 +29,30 @@ test suite.
 cargo install cargo-nextest
 cargo nextest run
 ```
+
+## How to build (Docker)
+with the new changes building on ubuntu 20.04 is finally possible adding more support to the following distros:
+- Ubuntu 20.04
+- Ubuntu 22.04
+- Ubuntu 24.04
+- Debian 11
+- Debian 12
+- Fedora, arch, and almost any modern distro (since their glibc versions will be newer than 2.31).
+- Ubuntu +22.04 and its derivatives (Kubuntu, Xubuntu, etc.)
+- Debian +12 (Bookworm) (which uses glibc 2.36) and newer versions
+- Fedora +37
+- Pop!_OS +22.04 (ubuntu based)
+- Arch Linux and its derivatives (Manjaro, EndeavourOS, etc.)
+- openSUSE Tumbleweed (not tested)
+
+Note: original project supported only Ubuntu 24.04 !  
+
+To build you simply run the container and copy the outputs ! 
+```bash
+> docker build -f Linux.Dockerfile -t unstoppable-swap-build .
+> docker create -it --name unstoppable-swap-build  unstoppable-swap-build bash
+> mkdir output
+> docker cp unstoppable-swap-build:/output/. ./output/
+```
+
+your build should be in `output` folder 

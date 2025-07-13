@@ -1,0 +1,94 @@
+name: Build UnstoppableSwap with Docker
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      run: |
+        docker build -f Linux.dockerfile -t unstoppable-swap-builder .
+        
+    - name: Create container and extract artifacts
+      run: |
+        # Create container from image
+        CONTAINER_ID=$(docker create unstoppable-swap-builder)
+        
+        # Create output directory
+        mkdir -p artifacts
+        
+        # Copy artifacts from container
+        docker cp $CONTAINER_ID:/output/ ./artifacts/
+        
+        # Clean up container
+        docker rm $CONTAINER_ID
+        
+        # List extracted files
+        echo "Extracted artifacts:"
+        find ./artifacts -type f -name "*.deb" -o -name "*.AppImage" | head -20
+        
+    - name: Upload .deb packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: deb-packages
+        path: |
+          artifacts/deb/*.deb
+        retention-days: 30
+        
+    - name: Upload .AppImage files
+      uses: actions/upload-artifact@v4
+      with:
+        name: appimage-files
+        path: |
+          artifacts/appimage/*.AppImage
+        retention-days: 30
+        
+    - name: Upload all build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: all-build-artifacts
+        path: |
+          artifacts/
+        retention-days: 30
+        
+    - name: Display build summary
+      run: |
+        echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "### Generated Artifacts:" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # List .deb files
+        if ls artifacts/output/deb/*.deb 1> /dev/null 2>&1; then
+          echo "#### .deb packages:" >> $GITHUB_STEP_SUMMARY
+          for file in artifacts/output/deb/*.deb; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              size=$(stat -c%s "$file" | numfmt --to=iec)
+              echo "- $filename ($size)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # List .AppImage files
+        if ls artifacts/output/appimage/*.AppImage 1> /dev/null 2>&1; then
+          echo "#### .AppImage files:" >> $GITHUB_STEP_SUMMARY
+          for file in artifacts/output/appimage/*.AppImage; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file")
+              size=$(stat -c%s "$file" | numfmt --to=iec)
+              echo "- $filename ($size)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        fi
