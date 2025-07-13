@@ -31,13 +31,7 @@ cargo nextest run
 ```
 
 ## How to build (Docker)
-with the new changes building on ubuntu 20.04 is finally possible adding more support to the following distros:
-- Ubuntu 20.04
-- Ubuntu 22.04
-- Ubuntu 24.04
-- Debian 11
-- Debian 12
-- Fedora, arch, and almost any modern distro (since their glibc versions will be newer than 2.31).
+with the new changes building on ubuntu 22.04 is finally possible adding more support to the following distros:
 - Ubuntu +22.04 and its derivatives (Kubuntu, Xubuntu, etc.)
 - Debian +12 (Bookworm) (which uses glibc 2.36) and newer versions
 - Fedora +37
