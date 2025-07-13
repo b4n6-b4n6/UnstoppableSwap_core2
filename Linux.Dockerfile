@@ -5,6 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV NVM_DIR="/root/.nvm"
 ENV PATH="/root/.nvm/versions/node/v20.18.0/bin:/root/.cargo/bin:$PATH"
 ENV RUST_VERSION=stable
+ENV TAURI_SIGNING_PRIVATE_KEY=dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5N2x5d3FhQ0dvM2psZmhJTjR6Nmx5bi8wRDBDR0YwV3ZCUDA4S3NIYzBKOEFBQkFBQUFBQUFBQUFBQUlBQUFBQXV6endvdnRLenJTRDVxSXU1NnNQQ1RUcXNWdDJhTElFT2hnbFdiemd0elZ0VnJLdGhJQVBGZEtkYjdQd0ZqWE9VTmRoczVKeVV0M3pBYmxSV3A0M3Vscm14bWZyVHZZOE5ESlljejhRNFJJQkxnK0RVWmhYU0pQWVB1RlZjblA1eHNxVjBZQzdQUk09Cg==
+ENV TAURI_SIGNING_PRIVATE_KEY_PASSWORD=mine2025
 
 # Update package lists and install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -41,6 +43,7 @@ RUN apt-get update && apt-get install -y \
     graphviz \
     curl \
     git \
+    wget \
     libgtk-3-dev \
     libayatana-appindicator3-dev \
     librsvg2-dev \
