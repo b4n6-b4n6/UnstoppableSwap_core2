@@ -18,7 +18,7 @@ jobs:
       
     - name: Build Docker image
       run: |
-        docker build -f Linux.dockerfile -t unstoppable-swap-builder .
+        docker build -f Linux.Dockerfile -t unstoppable-swap-builder .
         
     - name: Create container and extract artifacts
       run: |
